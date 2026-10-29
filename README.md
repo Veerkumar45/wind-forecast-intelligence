@@ -1,182 +1,129 @@
-[![WindSight Backend Tests](https://github.com/Veerkumar45/wind-forecast-intelligence/actions/workflows/tests.yml/badge.svg)](https://github.com/Veerkumar45/wind-forecast-intelligence/actions/workflows/tests.yml)
 # WindSight — Wind Forecast Intelligence Dashboard
 
-A full-stack data analytics dashboard for evaluating wind power forecast accuracy against actual electricity generation data. WindSight provides forecast performance metrics, hourly comparisons, daily error analysis, and forecast bias insights using UK wind data from January 2026.
+**An end-to-end renewable energy analytics platform for evaluating wind power forecasts, measuring prediction errors, and identifying forecast bias.**
+
+[Live Demo](https://windsight-frontend-dytp.onrender.com) · [Backend API](https://windsight-api-99a5.onrender.com) · [API Documentation](https://windsight-api-99a5.onrender.com/docs)
 
 ## Overview
 
-Wind power forecasts are important for electricity system planning. Understanding the difference between predicted and actual generation helps analysts evaluate forecast performance and identify periods of larger errors.
+WindSight compares day-ahead wind generation forecasts against historical actual generation to help users understand forecast accuracy and identify potential operational risks.
 
-WindSight processes historical wind generation and forecast data and presents the results through an interactive dashboard.
+The dashboard presents forecast performance through key statistical metrics, hourly generation comparisons, daily error trends, and forecast bias analysis.
 
-## Features
+**Dataset:** January 2026 historical data  
+**Evaluation coverage:** 744 hourly records
 
-- **Forecast accuracy KPIs:** Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), forecast bias, and Mean Absolute Percentage Error (MAPE).
-- **Hourly comparison:** Visual comparison of actual wind generation against forecasts.
-- **Daily accuracy analysis:** Examine daily MAE across January 2026.
-- **Worst forecast days:** Identify days with the largest forecast errors.
-- **Forecast bias analysis:** Understand whether forecasts tend to overestimate or underestimate actual generation.
-- **REST API:** Access processed analytics through FastAPI endpoints.
-- **Docker support:** Run the frontend and backend using Docker Compose.
+## Key Results
 
-## Technology Stack
-
-| Component | Technologies |
-|---|---|
-| Frontend | React, Vite, Recharts |
-| Backend | Python, FastAPI |
-| Data processing | Pandas, NumPy |
-| Data format | JSON, CSV |
-| Deployment | Docker, Docker Compose |
-
-## Architecture
-
-```text
-Historical Wind Data (JSON / CSV)
-              |
-              v
-     Python Data Processing
-        Pandas / NumPy
-              |
-              v
-        FastAPI Backend
-              |
-       REST API Endpoints
-              |
-              v
-       React Dashboard
-       Vite + Recharts
-              |
-              v
-      Interactive Analytics
-```
-
-## Dataset
-
-The project uses UK electricity system wind data associated with Elexon's Balancing Mechanism Reporting Service (BMRS).
-
-The included dataset covers January 1–31, 2026.
-
-| Dataset | Description |
-|---|---|
-| `wind_actuals_january_2026.json` | 1,488 half-hourly actual wind generation records |
-| `wind_forecasts_january_2026.json` | 18,080 wind forecast records |
-| `daily_forecast_accuracy_january_2026.csv` | 744 hourly records of daily forecast accuracy analysis |
-
-The hourly evaluation contains 744 delivery hours for January 2026.
-
-**Data source:** Elexon BMRS. Verify the applicable dataset documentation and usage terms before redistributing the raw data.
-
-## Forecast Accuracy Results
-
-The following results are calculated from the project's January 2026 evaluation.
-
-### Day-ahead forecast
-
-| Metric | Result |
+| Metric | Day-ahead forecast |
 |---|---:|
 | Mean Absolute Error (MAE) | 2,017.92 |
 | Root Mean Squared Error (RMSE) | 2,477.04 |
 | Forecast Bias | +1,806.23 |
 | Mean Absolute Percentage Error (MAPE) | 19.68% |
-| Evaluated delivery hours | 744 |
 
-### Baseline comparison
+**Interpretation:** The positive forecast bias indicates systematic overforecasting over the evaluated period. This matters because forecast errors can affect renewable energy planning and procurement decisions.
 
-| Metric | Day-ahead forecast | Baseline forecast |
-|---|---:|---:|
-| MAE | 2,017.92 | 1,799.54 |
-| RMSE | 2,477.04 | 2,287.10 |
-| MAPE | 19.68% | 16.46% |
-| Bias | +1,806.23 | +1,592.87 |
+*These metrics describe the evaluated January 2026 dataset and should not be interpreted as guarantees of future performance.*
 
-The evaluated day-ahead forecasts have a higher MAE and RMSE than the project's baseline. Both forecast sets show positive bias, indicating overforecasting under the project's bias convention.
+## Features
 
-**Evaluation assumption:** Day-ahead forecasts are selected using the latest forecast published by 12:00 UTC on the previous calendar day. This is a project-defined evaluation rule, not a claim about the official market deadline.
+- **Forecast accuracy:** Evaluate day-ahead forecasts using MAE, RMSE, and MAPE.
+- **Forecast bias:** Identify systematic overforecasting or underforecasting.
+- **Hourly comparison:** Compare actual wind generation with forecast generation.
+- **Daily performance:** Examine how forecast errors change over time.
+- **Risk analysis:** Investigate days with larger forecast errors.
+- **Historical analysis:** Explore the January 2026 evaluation period.
+- **Automated validation:** Run tests and dataset quality checks through GitHub Actions.
 
-The baseline uses the latest forecast published at or before the delivery-hour start. Results depend on these selection rules and the available data.
+## Architecture
 
-## API Endpoints
-
-The FastAPI backend provides the following endpoints.
-
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/` | Root endpoint |
-| GET | `/api/health` | Health and data availability check |
-| GET | `/api/summary` | Summary metrics and KPIs |
-| GET | `/api/daily-accuracy` | Daily forecast accuracy |
-| GET | `/api/hourly-comparison` | Hourly actual-versus-forecast data |
-| GET | `/api/worst-days` | Days with the largest forecast errors |
-| GET | `/api/forecast-bias` | Forecast bias analysis |
-
-The hourly comparison endpoint supports date filters:
-
-```text
-/api/hourly-comparison?start_date=2026-01-01&end_date=2026-01-31
+```mermaid
+flowchart TD
+    A[Historical Actuals and Forecast Data] --> B[Python Data Processing]
+    B --> C[Forecast Evaluation]
+    C --> D[FastAPI Backend]
+    D --> E[Nginx Reverse Proxy]
+    E --> F[React Frontend]
+    F --> G[Recharts Visualizations]
+    G --> H[WindSight Dashboard]
+    I[GitHub Actions] --> J[Automated Tests and Data Validation]
 ```
 
-The worst-days endpoint supports a result limit:
+### Request Flow
 
-```text
-/api/worst-days?limit=5
-```
+1. Historical actual and forecast data are processed in Python.
+2. The backend calculates or serves forecast evaluation results through FastAPI endpoints.
+3. The React frontend requests analytics from the backend.
+4. Nginx forwards frontend API requests to the deployed backend.
+5. Recharts renders the resulting metrics and time-series data.
 
-## Run Locally
+## Technology Stack
 
-### Prerequisites
+| Layer | Technologies |
+|---|---|
+| Frontend | React, Vite, JavaScript |
+| Visualization | Recharts |
+| Backend | Python, FastAPI |
+| Data analysis | Pandas, NumPy |
+| Web server / proxy | Nginx |
+| Testing | Pytest |
+| Data validation | Python validation scripts |
+| CI/CD | GitHub Actions |
+| Deployment | Render |
+| Version control | Git, GitHub |
 
-- Python installed
-- Node.js and npm installed
-- Git installed
+## Testing and Data Quality
+
+The project includes automated backend tests and dataset validation.
+
+Previously verified locally:
+
+- 25 automated tests passed.
+- Dataset validation passed.
+- Actual generation data contained 1,488 half-hour intervals.
+- The evaluation dataset covered 744 hourly records.
+- Actual and forecast coverage matched across the evaluated 744 hours.
+
+GitHub Actions is configured to run automated tests and dataset validation when changes are pushed to `main` or submitted through a pull request.
+
+## Running Locally
 
 ### 1. Clone the repository
 
 ```bash
-git clone 
+git clone https://github.com/Veerkumar45/wind-forecast-intelligence.git
 cd wind-forecast-intelligence
 ```
 
-Replace the placeholder with your actual repository URL.
-
-### 2. Start the backend
-
-Open a terminal in the project directory:
+### 2. Set up the Python environment
 
 ```bash
-cd backend
 python -m venv .venv
 ```
 
-Activate the virtual environment.
+Activate the environment on Windows:
 
-**Windows PowerShell:**
-
-```powershell
-.\.venv\Scripts\Activate.ps1
+```cmd
+.venv\Scripts\activate
 ```
 
-Install the dependencies:
+Install backend dependencies:
 
 ```bash
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 ```
 
-Start the FastAPI application:
+### 3. Start the backend
 
 ```bash
-uvicorn app.main:app --reload
+cd backend
+uvicorn main:app --reload
 ```
 
-The backend should be available at:
+The API should be available at `http://127.0.0.1:8000`, with interactive documentation at `http://127.0.0.1:8000/docs`.
 
-- API: `http://127.0.0.1:8000`
-- Interactive API documentation: `http://127.0.0.1:8000/docs`
-- Health check: `http://127.0.0.1:8000/api/health`
-
-Run the command from the `backend` directory.
-
-### 3. Start the frontend
+### 4. Start the frontend
 
 Open a second terminal:
 
@@ -186,128 +133,56 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite, typically:
+Open the local frontend URL printed by Vite, normally `http://localhost:5173`.
 
-```text
-http://localhost:5173
-```
-
-Keep the backend running while using the dashboard.
-
-## Run with Docker
-
-Docker Compose provides a convenient way to start the frontend and backend together.
-
-From the project root, run:
-
-```bash
-docker compose up --build -d
-```
-
-Check the running containers:
-
-```bash
-docker compose ps
-```
-
-View service logs:
-
-```bash
-docker compose logs
-```
-
-Open the dashboard:
-
-```text
-http://localhost:8080
-```
-
-Check the backend:
-
-```text
-http://127.0.0.1:8000/api/health
-```
-
-Stop the services:
-
-```bash
-docker compose down
-```
-
-These commands assume Docker Desktop is installed and running and that the Compose configuration exposes the ports described above.
+**Note:** The local Vite proxy and production Nginx proxy are configured separately. For local development, the backend must be running on port 8000.
 
 ## Project Structure
 
 ```text
 wind-forecast-intelligence/
 ├── backend/
-│   ├── app/
-│   │   └── main.py
 │   ├── data/
-│   │   ├── wind_actuals_january_2026.json
-│   │   ├── wind_forecasts_january_2026.json
-│   │   └── daily_forecast_accuracy_january_2026.csv
-│   └── requirements.txt
+│   ├── main.py
+│   ├── requirements.txt
+│   └── validate_data.py
 ├── frontend/
 │   ├── src/
-│   ├── package.json
-│   └── vite.config.js
-├── docker-compose.yml
+│   ├── nginx.conf
+│   ├── Dockerfile
+│   └── package.json
+├── tests/
+├── screenshots/
+├── .github/
+│   └── workflows/
 └── README.md
 ```
 
-This is a representative overview; additional files may exist in the repository.
+## Screenshots
 
-## Key Learnings
+The repository includes dashboard screenshots covering:
 
-- Building REST APIs with FastAPI.
-- Processing and analyzing time-series data using Pandas and NumPy.
-- Comparing forecasts with actual observations.
-- Evaluating prediction errors using MAE, RMSE, MAPE, and bias.
-- Visualizing analytical results in a React dashboard.
-- Connecting a frontend to a backend API.
-- Containerizing an application using Docker Compose.
-
-## Limitations
-
-- The current evaluation covers January 2026 only.
-- Forecast accuracy results depend on the forecast-selection rules and data availability.
-- The reported metrics describe forecast errors; they do not directly establish financial savings or operational cost reductions.
-- Additional months and out-of-sample testing would be needed to assess performance across different seasons.
+- Dashboard overview
+- Forecast accuracy
+- Forecast bias
+- Hourly actual-versus-forecast comparison
+- Worst forecast days
 
 ## Future Improvements
 
-- Add support for additional months and historical periods.
-- Introduce configurable forecast lead-time filters.
-- Add date-range and forecast-type filters to the dashboard.
-- Include automated data validation and data-quality reporting.
-- Add unit and integration tests for API endpoints and metric calculations.
-- Implement automated data ingestion and scheduled evaluation.
-- Add continuous integration and deployment checks.
+- Add support for additional evaluation periods.
+- Compare multiple forecasting models.
+- Introduce confidence intervals and uncertainty analysis.
+- Improve monitoring and API error reporting.
+- Add automated performance and deployment smoke tests.
 
-## Dashboard Preview
+## Author
 
-### 1. Dashboard Overview
-View the key forecast performance indicators, including MAE, RMSE, forecast bias, and MAPE.
+**Sanket Ingale**
 
-![Dashboard Overview](screenshots/dashboard-overview.png)
+AI & Data Science graduate interested in data engineering, machine learning, renewable energy analytics, and building practical software systems.
 
-### 2. Hourly Actual vs. Forecast
-Compare actual wind generation against forecast generation throughout the day.
+---
 
-![Hourly actual versus forecast](screenshots/hourly-comparison.png)
-
-### 3. Daily Forecast Accuracy
-Identify changes in daily mean absolute forecast error throughout January 2026.
-
-![Daily forecast accuracy](screenshots/forecast-accuracy.png)
-
-### 4. Forecast Bias Analysis
-Understand the direction and magnitude of systematic forecast error.
-
-![Forecast bias analysis](screenshots/forecast-bias.png)
-
-### 5. Operational Risk Analysis
-Identify the five days with the highest mean absolute forecast error.
-
-![Days with highest forecast error](screenshots/worst-forecast-days.png)
+**Explore the live dashboard:**  
+https://windsight-frontend-dytp.onrender.com
