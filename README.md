@@ -1,3 +1,4 @@
+[![WindSight Backend Tests](https://github.com/Veerkumar45/wind-forecast-intelligence/actions/workflows/tests.yml/badge.svg)](https://github.com/Veerkumar45/wind-forecast-intelligence/actions/workflows/tests.yml)
 # WindSight — Wind Forecast Intelligence Dashboard
 
 A full-stack data analytics dashboard for evaluating wind power forecast accuracy against actual electricity generation data. WindSight provides forecast performance metrics, hourly comparisons, daily error analysis, and forecast bias insights using UK wind data from January 2026.
