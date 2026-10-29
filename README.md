@@ -283,7 +283,3 @@ This is a representative overview; additional files may exist in the repository.
 - Add unit and integration tests for API endpoints and metric calculations.
 - Implement automated data ingestion and scheduled evaluation.
 - Add continuous integration and deployment checks.
-
-## License
-
-Choose and add an appropriate license before distributing the project. Ensure that the applicable data-source terms permit any redistribution of included data.
