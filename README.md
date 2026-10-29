@@ -132,7 +132,7 @@ The worst-days endpoint supports a result limit:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Veerkumar45/wind-forecast-intelligence
+git clone 
 cd wind-forecast-intelligence
 ```
 
@@ -283,3 +283,30 @@ This is a representative overview; additional files may exist in the repository.
 - Add unit and integration tests for API endpoints and metric calculations.
 - Implement automated data ingestion and scheduled evaluation.
 - Add continuous integration and deployment checks.
+
+## Dashboard Preview
+
+### 1. Dashboard Overview
+View the key forecast performance indicators, including MAE, RMSE, forecast bias, and MAPE.
+
+![Dashboard Overview](screenshots/dashboard-overview.png)
+
+### 2. Hourly Actual vs. Forecast
+Compare actual wind generation against forecast generation throughout the day.
+
+![Hourly actual versus forecast](screenshots/hourly-comparison.png)
+
+### 3. Daily Forecast Accuracy
+Identify changes in daily mean absolute forecast error throughout January 2026.
+
+![Daily forecast accuracy](screenshots/forecast-accuracy.png)
+
+### 4. Forecast Bias Analysis
+Understand the direction and magnitude of systematic forecast error.
+
+![Forecast bias analysis](screenshots/forecast-bias.png)
+
+### 5. Operational Risk Analysis
+Identify the five days with the highest mean absolute forecast error.
+
+![Days with highest forecast error](screenshots/worst-forecast-days.png)
