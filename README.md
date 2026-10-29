@@ -178,9 +178,9 @@ The repository includes dashboard screenshots covering:
 
 ## Author
 
-**Sanket Ingale**
+**Veerkumar Kuagji**
 
-AI & Data Science graduate interested in data engineering, machine learning, renewable energy analytics, and building practical software systems.
+Computer Science graduate interested in software engineering, machine learning, renewable energy analytics, and building practical software systems.
 
 ---
 
