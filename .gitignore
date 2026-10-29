@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Node.js
+node_modules/
+frontend/dist/
+
+# Editors
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Operating system
+.DS_Store
+Thumbs.db
