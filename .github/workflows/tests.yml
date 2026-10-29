@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: Run API Tests
+    name: Run API and Data Validation Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -29,3 +29,6 @@ jobs:
 
       - name: Run automated tests
         run: python -m pytest tests/ -v
+
+      - name: Validate January 2026 dataset
+        run: python backend/validate_data.py

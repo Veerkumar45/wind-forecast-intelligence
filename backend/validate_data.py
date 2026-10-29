@@ -1,10 +1,10 @@
-
-import json
 from pathlib import Path
 
+import json
 import pandas as pd
 
-DATA_DIR = Path("data")
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
 
 ACTUALS_FILE = DATA_DIR / "wind_actuals_january_2026.json"
 FORECASTS_FILE = DATA_DIR / "wind_forecasts_january_2026.json"
