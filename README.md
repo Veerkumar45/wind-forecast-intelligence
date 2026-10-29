@@ -132,7 +132,7 @@ The worst-days endpoint supports a result limit:
 ### 1. Clone the repository
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone https://github.com/Veerkumar45/wind-forecast-intelligence
 cd wind-forecast-intelligence
 ```
 
