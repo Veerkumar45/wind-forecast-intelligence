@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import os
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,20 +30,26 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Allow the React frontend to access the API during development.
+# Allow local development and the deployed frontend to access the API.
+frontend_origin = os.getenv("FRONTEND_ORIGIN", "").strip()
+
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+]
+
+if frontend_origin:
+    allowed_origins.append(frontend_origin)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # --------------------------------------------------
 # Data loading
